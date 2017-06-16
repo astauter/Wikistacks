@@ -21,23 +21,31 @@ router.post('/add', function(req, res, next) {
     content: req.body.content,
     status: req.body.status
   });
-
   // var User = User.build({
   //   name: req.body.name,
   //   email : req.body.email,
   // });
-
-  // STUDENT ASSIGNMENT:
-  // make sure we only redirect *after* our save is complete!
-  // note: `.save` returns a promise or it can take a callback.
   page.save();
   res.json(page);
-  // -> after save -> res.redirect('/');
-
 });
 
 router.get('/add', function(req, res, next) {
-  res.render('addpage',{});
+  res.render('addpage');
 });
+
+router.get('/:urlTitle', function (req, res, next) {
+  Page.findOne({
+    where: {
+       urlTitle: req.params.urlTitle,
+       //status: open
+    }
+  }).then( function (foundPage){
+    console.log('here', foundPage)
+    res.render('wikipage', {page: foundPage})
+
+  }).catch(next);
+});
+
+
 
 module.exports = router;

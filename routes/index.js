@@ -6,4 +6,8 @@ const userRouter = require('./user.js');
 router.use('/wiki', wikiRouter);
 router.use('/user', userRouter);
 
+router.get('/', function(req, res, next){
+    res.render('index')
+})
+
 module.exports = router;

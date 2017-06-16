@@ -7,12 +7,12 @@ const path = require('path');
 const models = require('./models/index.js');
 const router = require('./routes/index')
 
+
+app.set('view engine', 'html');
+app.engine('html', nunjucks.render);
 nunjucks.configure('views', {
   noCache: true
 });
-app.set('view engine', 'html');
-app.engine('html', nunjucks.render);
-
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(bodyParser.urlencoded({
