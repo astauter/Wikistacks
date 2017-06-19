@@ -10,8 +10,7 @@ var Page = db.define('page', {
     type: Sequelize.STRING,
     allowNull: false,
     get: function() {
-      var urlBase = '/wiki/';
-      return this.getDataValue(urlBase + 'urlTitle');
+      return '/wiki/' + this.getDataValue('title');
     }
   },
   content: {
@@ -47,6 +46,7 @@ var User = db.define('user', {
   }
 });
 
+Page.belongsTo(User, { as: 'author' });
 
 module.exports = {
   Page: Page,

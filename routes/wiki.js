@@ -15,33 +15,50 @@ router.post('/', function(req, res, next) {
 router.post('/add', function(req, res, next) {
   // STUDENT ASSIGNMENT:
   // add definitions for `title` and `content`
+  User.findOrCreate({
+      where: {
+        name: req.body.name,
+        email: req.body.email
+      }
+    })
+    .then(function(values) {
 
-  var page = Page.build({
-    title: req.body.title,
-    content: req.body.content,
-    status: req.body.status
-  });
-  // var User = User.build({
-  //   name: req.body.name,
-  //   email : req.body.email,
-  // });
-  page.save();
-  res.json(page);
+      var user = values[0];
+
+      var page = Page.build({
+        title: req.body.title,
+        content: req.body.content,
+        status: req.body.status
+      });
+
+        page.save()
+        .then(function(page) {
+          page.setAuthor(user);
+          res.redirect('/wiki/' + page.title);
+        })
+        .catch(next);
+
+    });
+
+  // page.save();
+  // res.redirect('/wiki/' + page.title);
 });
+
 
 router.get('/add', function(req, res, next) {
   res.render('addpage');
 });
 
-router.get('/:urlTitle', function (req, res, next) {
+router.get('/:urlTitle', function(req, res, next) {
   Page.findOne({
     where: {
-       urlTitle: req.params.urlTitle,
-       //status: open
+      urlTitle: req.params.urlTitle,
+      //status: open
     }
-  }).then( function (foundPage){
-    console.log('here', foundPage)
-    res.render('wikipage', {page: foundPage})
+  }).then(function(foundPage) {
+    res.render('wikipage', {
+      page: foundPage
+    });
 
   }).catch(next);
 });
